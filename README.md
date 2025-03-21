@@ -1,4 +1,5 @@
-Setup
+
+This main intention of the project is to build an idea of how agents can explore any given application and perform tests using reinforcement learning.
 
 Step by step guide setting up this project
 
