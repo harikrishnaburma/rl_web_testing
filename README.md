@@ -18,3 +18,6 @@ Step by step guide setting up this project
 7. Make sure project structure looks like below
 
 <img width="788" alt="Screenshot 2025-03-21 at 2 50 45 PM" src="https://github.com/user-attachments/assets/04009b3f-2ade-4ae5-bec0-47bb11d71f75" />
+
+8. Run main.py
+   *  python3 main.py
