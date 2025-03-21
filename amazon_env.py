@@ -15,11 +15,12 @@ class AmazonTestingEnv(gym.Env):
         #chrome_options.add_argument("--headless")
         chrome_options.add_argument("--disable-blink-features=AutomationControlled")
         self.driver = webdriver.Chrome(options=chrome_options)
+        self.driver.maximize_window()
         
         # Track visited pages
         self.visited_pages = set()
         self.current_step = 0
-        self.max_steps = 20
+        self.max_steps = 10
         
         # Define action and observation spaces
         self.action_space = gym.spaces.Discrete(4)  # 4 actions
@@ -48,24 +49,27 @@ class AmazonTestingEnv(gym.Env):
         done = False
         
         try:
-            if action == 0:  # Search for a product
+            if action == 0:  # Search for a generic product
                 search_box = self.driver.find_element(By.ID, "twotabsearchtextbox")
+                search_box.clear()
                 search_box.send_keys("laptop")
                 self.driver.find_element(By.ID, "nav-search-submit-button").click()
                 reward += 1
                 
-            elif action == 1:  # Click on a product
-                products = self.driver.find_elements(By.CSS_SELECTOR, ".s-result-item [data-asin]")
-                if products:
-                    products[0].click()
-                    reward += 1.5
-                    
-            elif action == 2:  # Add to cart
-                addtocarts = self.driver.find_elements(By.XPATH, "//input[@id='add-to-cart-button']")
-                if addtocarts:
-                    addtocarts[1].click()
-                    self.driver.find_element(By.XPATH, "//a[@id='attach-close_sideSheet-link']/ancestor::div[@id='attach-desktop-sideSheet']").click()
+            elif action == 1:  # Search for a brand and add a product to cart
+                search_box_input = self.driver.find_element(By.ID, "twotabsearchtextbox")
+                search_box_input.clear()
+                search_box_input.send_keys("hp laptop")
+                self.driver.find_element(By.ID, "nav-search-submit-button").click()
+                self.driver.find_element(By.XPATH, "//a[@aria-label='Shop HP Laptops']").click()
+                addtocart = self.driver.find_elements(By.XPATH, "//button[@data-click-type='ADDTOCART']")
+                if addtocart:
+                    addtocart[1].click()
                     reward += 3
+                    
+            elif action == 2:  # Navigate to Mobiles
+                self.driver.find_element(By.LINK_TEXT, "Mobiles").click()
+                reward += 2
                 
             elif action == 3:  # Navigate to deals
                 self.driver.find_element(By.LINK_TEXT, "Today's Deals").click()
