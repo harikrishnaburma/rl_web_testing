@@ -64,6 +64,7 @@ class AmazonTestingEnv(gym.Env):
                 addtocarts = self.driver.find_elements(By.XPATH, "//input[@id='add-to-cart-button']")
                 if addtocarts:
                     addtocarts[1].click()
+                    self.driver.find_element(By.XPATH, "//a[@id='attach-close_sideSheet-link']/ancestor::div[@id='attach-desktop-sideSheet']").click()
                     reward += 3
                 
             elif action == 3:  # Navigate to deals
